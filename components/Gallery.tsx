@@ -91,7 +91,7 @@ export default function Gallery() {
     <section id="galeria" className="section-padding bg-[#231123]">
       <div className="container-custom">
         <div className="mb-12 text-center">
-          <h2 className="heading-2 mb-4 text-white">"La colección"</h2>
+          <h2 className="heading-2 mb-4 text-white">&ldquo;La colección&rdquo;</h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-300">
             Inspirada en la ciudad de México y creada para brindar estilo, distinción y sobre todo, orgullo por el esfuerzo de cada atleta.
           </p>

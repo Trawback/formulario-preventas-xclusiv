@@ -21,8 +21,8 @@ export default function CookieBanner() {
     setShowBanner(false);
     
     // Aquí puedes inicializar servicios de analytics/marketing
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('consent', 'update', {
         'analytics_storage': 'granted',
         'ad_storage': 'granted'
       });
@@ -34,8 +34,8 @@ export default function CookieBanner() {
     setShowBanner(false);
     
     // Deshabilitar servicios de analytics/marketing
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('consent', 'update', {
         'analytics_storage': 'denied',
         'ad_storage': 'denied'
       });
