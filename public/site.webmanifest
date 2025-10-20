@@ -1,0 +1,17 @@
+{
+  "name": "XCLUSIV Preventa",
+  "short_name": "XCLUSIV",
+  "description": "Preventa exclusiva de la nueva colección XCLUSIV",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#9333ea",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
+

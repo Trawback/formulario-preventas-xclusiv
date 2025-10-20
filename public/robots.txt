@@ -1,0 +1,22 @@
+# robots.txt para XCLUSIV Preventa
+
+# Permitir a todos los bots
+User-agent: *
+Allow: /
+
+# Bloquear acceso a la API
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://preventa.xclusiv.com/sitemap.xml
+
+# Rastreo optimizado para Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Rastreo optimizado para Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
