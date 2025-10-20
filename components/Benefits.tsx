@@ -3,12 +3,12 @@ export default function Benefits() {
     {
       icon: '🎁',
       title: 'Descuento exclusivo',
-      description: 'Hasta 30% OFF en preventa para los primeros registrados',
+      description: 'Descuento exclusivo para los que adquieran su prenda en preventa.',
     },
     {
       icon: '🚚',
       title: 'Envío gratis',
-      description: 'En compras superiores a $100.000 en toda Colombia',
+      description: 'En compras superiores a $1299.00 en toda la república mexicana',
     },
     {
       icon: '⚡',
@@ -27,17 +27,17 @@ export default function Benefits() {
     },
     {
       icon: '🎨',
-      title: 'Edición limitada',
+      title: 'Colección única',
       description: 'Diseños únicos que no se volverán a producir',
     },
   ];
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-[#231123]">
       <div className="container-custom">
         <div className="mb-12 text-center">
-          <h2 className="heading-2 mb-4">¿Por qué registrarte?</h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+          <h2 className="heading-2 mb-4 text-white">¿Por qué registrarte?</h2>
+          <p className="mx-auto max-w-2xl text-lg text-gray-300">
             Beneficios exclusivos para quienes se adelantan
           </p>
         </div>
@@ -46,13 +46,13 @@ export default function Benefits() {
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className="rounded-2xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-lg"
+              className="rounded-2xl border border-white/10 bg-[#1a0f1a] p-6 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/10 hover:border-primary-500/50"
             >
               <div className="mb-4 text-5xl">{benefit.icon}</div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">
+              <h3 className="mb-2 text-xl font-bold text-white">
                 {benefit.title}
               </h3>
-              <p className="text-gray-600">{benefit.description}</p>
+              <p className="text-gray-400">{benefit.description}</p>
             </div>
           ))}
         </div>

@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { APP_CONFIG, SEO_CONFIG, GTM_ID } from '@/lib/config';
 import Script from 'next/script';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+import CookieBanner from '@/components/CookieBanner';
 
 export const metadata: Metadata = {
   title: SEO_CONFIG.title,
@@ -65,27 +63,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={inter.variable}>
-      <head>
+    <html lang="es">
+      <body className="font-satoshi">
+        {/* Google Tag Manager Script */}
         {GTM_ID && (
-          <>
-            <Script
-              id="gtm-script"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                  })(window,document,'script','dataLayer','${GTM_ID}');
-                `,
-              }}
-            />
-          </>
+          <Script
+            id="gtm-script"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${GTM_ID}');
+              `,
+            }}
+          />
         )}
-      </head>
-      <body className={inter.className}>
+
+        {/* Google Tag Manager (noscript) */}
         {GTM_ID && (
           <noscript>
             <iframe
@@ -96,7 +93,11 @@ export default function RootLayout({
             />
           </noscript>
         )}
+        
         {children}
+        
+        {/* Cookie Banner */}
+        <CookieBanner />
       </body>
     </html>
   );

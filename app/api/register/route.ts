@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       apellido: data.apellido,
       email: data.email,
       whatsapp: data.whatsapp,
-      prenda: 'Hoodie', // Prenda fija
+      prenda: data.prenda,
       talla: data.talla,
       ciudad: data.ciudad,
       cantidad_estimada: data.cantidad_estimada,

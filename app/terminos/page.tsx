@@ -1,259 +1,141 @@
-import Footer from '@/components/Footer';
-import { APP_CONFIG } from '@/lib/config';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: `Términos y Condiciones - ${APP_CONFIG.name}`,
-  description: 'Términos y condiciones de uso y compra',
-};
+import Link from 'next/link';
 
 export default function TerminosPage() {
   return (
-    <>
-      <main className="min-h-screen bg-white">
-        <div className="container-custom py-16">
-          <div className="mx-auto max-w-4xl">
-            <h1 className="heading-2 mb-8">Términos y Condiciones</h1>
+    <main className="min-h-screen bg-[#231123] py-20">
+      <div className="container-custom">
+        <div className="mx-auto max-w-4xl">
+          {/* Header */}
+          <div className="mb-12">
+            <Link 
+              href="/"
+              className="inline-flex items-center gap-2 text-primary-500 hover:text-primary-400 transition-colors mb-6"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Volver al inicio
+            </Link>
+            <h1 className="heading-1 mb-4 text-white">Términos y Condiciones</h1>
+            <p className="text-gray-400">Última actualización: Octubre 2025</p>
+          </div>
 
-            <div className="prose prose-gray max-w-none">
-              <p className="text-sm text-gray-600">
-                Última actualización: {new Date().toLocaleDateString('es-ES')}
+          {/* Contenido */}
+          <div className="space-y-8 text-gray-300">
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">1. Aceptación de los Términos</h2>
+              <p className="leading-relaxed">
+                Al acceder y utilizar este sitio web de XCLUSIV, aceptas estar sujeto a estos términos y condiciones de uso. 
+                Si no estás de acuerdo con alguna parte de estos términos, no debes utilizar nuestro sitio web.
               </p>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  1. Aceptación de los Términos
-                </h2>
-                <p className="text-gray-700">
-                  Al registrarte en la preventa de {APP_CONFIG.name}, aceptas
-                  estos términos y condiciones en su totalidad. Si no estás de
-                  acuerdo con estos términos, no utilices este servicio.
-                </p>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">2. Preventa</h2>
+              <p className="leading-relaxed mb-4">
+                La preventa de productos está sujeta a las siguientes condiciones:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>El registro en la preventa no constituye una obligación de compra</li>
+                <li>Los precios de preventa son exclusivos y no serán válidos después del período establecido</li>
+                <li>Los descuentos aplican únicamente durante el período de preventa</li>
+                <li>Los productos están sujetos a disponibilidad de stock</li>
+                <li>XCLUSIV se reserva el derecho de cancelar pedidos en caso de inconsistencias</li>
+              </ul>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  2. Descripción del Servicio
-                </h2>
-                <p className="text-gray-700 mb-4">
-                  {APP_CONFIG.name} ofrece un servicio de preventa de prendas de
-                  vestir. Al registrarte:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                  <li>
-                    Obtienes acceso prioritario a la compra de productos antes
-                    del lanzamiento oficial
-                  </li>
-                  <li>Recibes descuentos exclusivos para preventa</li>
-                  <li>
-                    No estás obligado a realizar una compra solo por registrarte
-                  </li>
-                  <li>
-                    Los productos están sujetos a disponibilidad de stock
-                  </li>
-                </ul>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">3. Propiedad Intelectual</h2>
+              <p className="leading-relaxed">
+                Todo el contenido de este sitio web, incluyendo diseños, logos, textos, gráficos e imágenes, 
+                es propiedad de XCLUSIV y está protegido por las leyes de propiedad intelectual mexicanas e internacionales. 
+                Queda prohibida su reproducción sin autorización expresa.
+              </p>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  3. Registro y Cuenta
-                </h2>
-                <p className="text-gray-700 mb-4">
-                  Para registrarte en la preventa:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                  <li>Debes proporcionar información veraz y actualizada</li>
-                  <li>Debes ser mayor de 18 años</li>
-                  <li>
-                    Eres responsable de mantener la confidencialidad de tu
-                    información
-                  </li>
-                  <li>Un email solo puede registrarse una vez</li>
-                </ul>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">4. Pagos y Facturación</h2>
+              <p className="leading-relaxed mb-4">
+                Los pagos se procesan de forma segura a través de nuestros proveedores de pago autorizados:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Todas las transacciones se realizan en pesos mexicanos (MXN)</li>
+                <li>Los precios incluyen IVA cuando aplica</li>
+                <li>Aceptamos tarjetas de crédito/débito y transferencias bancarias</li>
+                <li>El cargo se realizará una vez confirmado el pedido</li>
+              </ul>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  4. Precios y Pagos
-                </h2>
-                <p className="text-gray-700 mb-4">
-                  Los precios y condiciones de pago:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                  <li>
-                    Los precios están en pesos colombianos (COP) e incluyen IVA
-                  </li>
-                  <li>
-                    Los descuentos de preventa son válidos por tiempo limitado
-                  </li>
-                  <li>
-                    Nos reservamos el derecho de modificar precios sin previo
-                    aviso
-                  </li>
-                  <li>
-                    El pago se procesa al momento de la compra, no al registro
-                  </li>
-                  <li>
-                    Aceptamos tarjetas de crédito/débito, PSE, y otros medios
-                    electrónicos
-                  </li>
-                </ul>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">5. Envíos y Entregas</h2>
+              <p className="leading-relaxed mb-4">
+                Los envíos se realizan a toda la República Mexicana:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Los tiempos de entrega se informan al momento de la compra</li>
+                <li>Los costos de envío varían según la ubicación</li>
+                <li>Envío gratis en compras superiores a $1,299 MXN</li>
+                <li>No nos hacemos responsables por retrasos causados por la paquetería</li>
+              </ul>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  5. Envíos y Entregas
-                </h2>
-                <p className="text-gray-700 mb-4">
-                  Condiciones de envío:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                  <li>
-                    Los envíos se realizan a partir de la fecha anunciada en la
-                    preventa
-                  </li>
-                  <li>Los tiempos de entrega son estimados y no garantizados</li>
-                  <li>
-                    El envío es gratuito en compras superiores a $100.000 COP
-                  </li>
-                  <li>Realizamos envíos a toda Colombia</li>
-                  <li>
-                    No somos responsables de retrasos causados por la empresa de
-                    mensajería
-                  </li>
-                </ul>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">6. Devoluciones y Cambios</h2>
+              <p className="leading-relaxed mb-4">
+                Política de devoluciones:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Tienes 5 días después de recibido para notificar defectos de fabricación</li>
+                <li>Las primeras 36 horas son críticas para reportar cualquier problema</li>
+                <li>El producto debe estar sin usar y con etiquetas originales</li>
+                <li>Los cambios están sujetos a disponibilidad de stock</li>
+                <li>Los costos de envío de devolución corren por cuenta del cliente salvo defecto de fabricación</li>
+              </ul>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  6. Devoluciones y Cambios
-                </h2>
-                <p className="text-gray-700 mb-4">
-                  Política de devoluciones:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                  <li>Tienes 15 días desde la recepción para cambios/devoluciones</li>
-                  <li>
-                    Los productos deben estar sin usar, con etiquetas originales
-                  </li>
-                  <li>El comprador asume el costo de envío de devolución</li>
-                  <li>
-                    El reembolso se procesa dentro de 5-10 días hábiles tras
-                    recibir el producto
-                  </li>
-                  <li>
-                    No se aceptan devoluciones de productos en oferta o
-                    promoción especial
-                  </li>
-                </ul>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">7. Limitación de Responsabilidad</h2>
+              <p className="leading-relaxed">
+                XCLUSIV no será responsable de daños indirectos, incidentales o consecuentes derivados del uso 
+                o la imposibilidad de usar nuestros productos o servicios. Nuestra responsabilidad se limita 
+                al precio de compra del producto.
+              </p>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  7. Propiedad Intelectual
-                </h2>
-                <p className="text-gray-700">
-                  Todo el contenido de este sitio web, incluyendo diseños,
-                  logos, textos, gráficos y código, es propiedad de{' '}
-                  {APP_CONFIG.name} y está protegido por las leyes de propiedad
-                  intelectual. No puedes reproducir, distribuir o modificar
-                  ningún contenido sin autorización previa.
-                </p>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">8. Modificaciones</h2>
+              <p className="leading-relaxed">
+                XCLUSIV se reserva el derecho de modificar estos términos y condiciones en cualquier momento. 
+                Las modificaciones serán efectivas inmediatamente después de su publicación en el sitio web. 
+                Es responsabilidad del usuario revisar periódicamente estos términos.
+              </p>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  8. Limitación de Responsabilidad
-                </h2>
-                <p className="text-gray-700">
-                  {APP_CONFIG.name} no se hace responsable de:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700 mt-4">
-                  <li>
-                    Errores tipográficos en la descripción de productos o
-                    precios
-                  </li>
-                  <li>
-                    Daños indirectos o consecuentes derivados del uso del
-                    servicio
-                  </li>
-                  <li>
-                    Problemas técnicos o interrupciones del servicio
-                  </li>
-                  <li>Uso no autorizado de tu cuenta por terceros</li>
-                </ul>
-              </section>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">9. Ley Aplicable</h2>
+              <p className="leading-relaxed">
+                Estos términos se rigen por las leyes de los Estados Unidos Mexicanos. 
+                Cualquier disputa será resuelta en los tribunales competentes de la Ciudad de México.
+              </p>
+            </section>
 
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  9. Cancelación de Pedidos
-                </h2>
-                <p className="text-gray-700">
-                  Nos reservamos el derecho de cancelar pedidos en casos de:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-gray-700 mt-4">
-                  <li>Sospecha de fraude</li>
-                  <li>Error en precios o disponibilidad</li>
-                  <li>Incumplimiento de estos términos</li>
-                  <li>Imposibilidad de verificar la información del comprador</li>
-                </ul>
-              </section>
-
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  10. Modificaciones
-                </h2>
-                <p className="text-gray-700">
-                  Nos reservamos el derecho de modificar estos términos en
-                  cualquier momento. Los cambios entrarán en vigor
-                  inmediatamente después de su publicación en este sitio.
-                </p>
-              </section>
-
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  11. Ley Aplicable
-                </h2>
-                <p className="text-gray-700">
-                  Estos términos se rigen por las leyes de la República de
-                  Colombia. Cualquier disputa se resolverá en los tribunales
-                  competentes de Colombia.
-                </p>
-              </section>
-
-              <section className="mt-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  12. Contacto
-                </h2>
-                <p className="text-gray-700">
-                  Para preguntas sobre estos términos:
-                </p>
-                <ul className="list-none space-y-2 text-gray-700 mt-4">
-                  <li>
-                    Email:{' '}
-                    <a
-                      href={`mailto:${APP_CONFIG.email}`}
-                      className="text-primary-600 underline"
-                    >
-                      {APP_CONFIG.email}
-                    </a>
-                  </li>
-                  <li>Empresa: {APP_CONFIG.name}</li>
-                </ul>
-              </section>
-            </div>
-
-            <div className="mt-12 text-center">
-              <a href="/" className="btn-primary">
-                Volver al inicio
-              </a>
-            </div>
+            <section className="rounded-2xl bg-[#1a0f1a] border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-4">10. Contacto</h2>
+              <p className="leading-relaxed mb-4">
+                Si tienes preguntas sobre estos términos y condiciones, puedes contactarnos:
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2">
+                  <span className="text-primary-500">Instagram:</span>
+                  <a href="https://instagram.com/xclusiv_comp" target="_blank" rel="noopener noreferrer" className="text-white hover:text-primary-500 transition-colors">
+                    @xclusiv_comp
+                  </a>
+                </li>
+              </ul>
+            </section>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </>
+      </div>
+    </main>
   );
 }
-

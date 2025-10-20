@@ -1,8 +1,8 @@
 // Configuración de la aplicación
 export const APP_CONFIG = {
   name: 'XCLUSIV',
-  tagline: 'Preventa Exclusiva',
-  description: 'Reserva tu lugar en la preventa de la nueva colección de XCLUSIV',
+  tagline: 'Únete a la Revolución',
+  description: 'Reserva tu Hoodie exclusivo y sé parte de la revolución athleisure',
   url: process.env.NEXT_PUBLIC_APP_URL || 'https://preventa.xclusiv.com',
   email: 'hola@xclusiv.com',
   social: {
@@ -13,11 +13,11 @@ export const APP_CONFIG = {
 
 // Configuración de SEO
 export const SEO_CONFIG = {
-  title: 'XCLUSIV - Preventa Exclusiva Nueva Colección',
+  title: 'XCLUSIV - Preventa Hoodie | Únete a la Revolución',
   description:
-    'Sé de los primeros en conseguir las prendas más exclusivas. Regístrate ahora y asegura tu lugar en nuestra preventa.',
+    'Reserva tu Hoodie XCLUSIV y sé parte de la revolución athleisure. Diseñado para atletas que buscan cambiar el mundo.',
   keywords:
-    'ropa exclusiva, streetwear, preventa, moda urbana, xclusiv, oversized',
+    'xclusiv, hoodie, athleisure, ropa deportiva, streetwear, preventa, atletas',
   ogImage: '/og-image.jpg',
   twitterHandle: '@xclusiv',
 };

@@ -1,23 +1,87 @@
+/* Satoshi Font Family */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-Variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-VariableItalic.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/resources/Satoshi-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --font-inter: 'Inter', system-ui, sans-serif;
-    --font-display: 'Cal Sans', system-ui, sans-serif;
+    --font-satoshi: 'Satoshi', system-ui, -apple-system, sans-serif;
   }
 
   * {
-    @apply border-gray-200;
+    @apply border-gray-100;
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply antialiased;
+    font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
+    background: #231123;
+    color: #FFFFFF;
   }
 
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Mejoras de accesibilidad */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
   }
 }
 
@@ -27,23 +91,37 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-primary-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary-600/50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100;
+  }
+
+  .btn-primary::before {
+    content: '';
+    @apply absolute inset-0 -z-10 bg-gradient-to-r from-primary-600 to-primary-700 opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-primary:hover::before {
+    @apply opacity-100;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-lg border-2 border-primary-600 px-6 py-3 text-base font-semibold text-primary-600 transition-all duration-200 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-dark bg-transparent px-8 py-4 text-base font-bold text-dark transition-all duration-300 hover:bg-dark hover:text-white hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .input-field {
-    @apply w-full rounded-lg border border-gray-300 px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500;
+    @apply w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 text-base text-dark placeholder-gray-400 shadow-sm transition-all duration-200 hover:border-gray-300 focus:border-primary-500 focus:shadow-md focus:shadow-primary-100 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400;
   }
 
   .label-field {
-    @apply mb-2 block text-sm font-semibold text-gray-700;
+    @apply mb-2 block text-sm font-bold text-dark;
   }
 
   .error-message {
-    @apply mt-1 text-sm text-red-600;
+    @apply mt-2 flex items-center gap-1.5 text-sm font-medium text-red-600;
+  }
+
+  .error-message::before {
+    content: '⚠';
+    @apply text-base;
   }
 
   .section-padding {
@@ -51,15 +129,35 @@
   }
 
   .heading-1 {
-    @apply text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl;
+    @apply text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl;
   }
 
   .heading-2 {
-    @apply text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl;
+    @apply text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl;
   }
 
   .heading-3 {
-    @apply text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl;
+    @apply text-2xl font-bold tracking-tight text-white sm:text-3xl;
+  }
+
+  /* Animaciones de microinteracciones */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.3s ease-in-out;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(238, 70, 121, 0); }
+    50% { box-shadow: 0 0 20px 8px rgba(238, 70, 121, 0.4); }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
   }
 }
 

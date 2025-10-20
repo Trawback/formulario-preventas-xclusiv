@@ -2,10 +2,17 @@ import { z } from 'zod';
 
 // Schema de validación para el formulario de registro
 export const RegisterFormSchema = z.object({
-  nombre: z.string().min(1, 'El nombre es obligatorio'),
-  apellido: z.string().min(1, 'El apellido es obligatorio'),
+  nombre: z
+    .string()
+    .min(1, 'El nombre es obligatorio')
+    .regex(/^[A-Z\s]+$/, 'Solo letras mayúsculas sin acentos ni caracteres especiales'),
+  apellido: z
+    .string()
+    .min(1, 'El apellido es obligatorio')
+    .regex(/^[A-Z\s]+$/, 'Solo letras mayúsculas sin acentos ni caracteres especiales'),
   email: z.string().email('Email inválido').min(1, 'El email es obligatorio'),
   whatsapp: z.string().min(1, 'El WhatsApp es obligatorio'),
+  prenda: z.string().min(1, 'Selecciona una prenda'),
   talla: z.string().min(1, 'Selecciona una talla'),
   ciudad: z.string().optional(),
   cantidad_estimada: z.number().min(1, 'Mínimo 1').max(5, 'Máximo 5'),
