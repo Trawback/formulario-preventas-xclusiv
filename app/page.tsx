@@ -5,6 +5,7 @@ import SizeGuide from '@/components/SizeGuide';
 import FAQ from '@/components/FAQ';
 import RegisterForm from '@/components/RegisterForm';
 import Footer from '@/components/Footer';
+import ScrollIndicator from '@/components/ScrollIndicator';
 import Script from 'next/script';
 import { RECAPTCHA_SITE_KEY } from '@/lib/config';
 
@@ -17,6 +18,9 @@ export default function Home() {
           strategy="lazyOnload"
         />
       )}
+
+      {/* Scroll Indicator */}
+      <ScrollIndicator />
 
       <main className="min-h-screen">
         <Hero />

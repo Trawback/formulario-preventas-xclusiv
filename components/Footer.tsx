@@ -16,19 +16,19 @@ export default function Footer() {
     {
       title: "Preventa",
       links: [
-        { name: "Registrarse", href: "/#registro" },
-        { name: "Productos", href: "/#galeria" },
-        { name: "Beneficios", href: "/#beneficios" },
-        { name: "Guía de Tallas", href: "/#tallas" }
+        { name: "Registrarse", href: "#registro-form", isSection: true },
+        { name: "Productos", href: "#galeria", isSection: true },
+        { name: "Beneficios", href: "#beneficios", isSection: true },
+        { name: "Guía de Tallas", href: "#tallas", isSection: true }
       ]
     },
     {
       title: "Legal",
       links: [
-        { name: "Términos", href: "/terminos" },
-        { name: "Privacidad", href: "/privacidad" },
-        { name: "Cookies", href: "/cookies" },
-        { name: "Accesibilidad", href: "/accesibilidad" }
+        { name: "Términos", href: "/terminos", isSection: false },
+        { name: "Privacidad", href: "/privacidad", isSection: false },
+        { name: "Cookies", href: "/cookies", isSection: false },
+        { name: "Accesibilidad", href: "/accesibilidad", isSection: false }
       ]
     }
   ];
@@ -42,6 +42,23 @@ export default function Footer() {
     // Handle newsletter subscription
     console.log("Newsletter subscription:", email);
     setEmail("");
+  };
+
+  // Función para scroll suave a las secciones
+  const handleSectionClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      // Actualizar URL sin recargar la página
+      window.history.pushState(null, '', href);
+    }
   };
 
   return (
@@ -89,58 +106,16 @@ export default function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="relative z-10 w-full py-16">
-        {/* Top Section - Newsletter & Logo */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 px-6">
-          {/* Newsletter Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div>
-                <h3 className="text-2xl font-black text-center bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">
-                  Únete a la Revolución
-                </h3>
-                <p className="text-gray-300 text-sm text-center">Sé el primero en conocer las novedades</p>
-              </div>
-            </div>
-            
-            <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-              <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Tu email para sorpresas exclusivas"
-                  className="w-full px-6 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
-                  required
-                />
-                <motion.button
-                  type="submit"
-                  className="absolute right-2 top-2 px-6 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-primary-500/25 transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  ¡Unirse!
-                </motion.button>
-              </div>
-              <p className="text-xs text-left text-gray-400">
-                🔒 No spam, puedes cancelar cuando quieras.
-              </p>
-            </form>
-          </motion.div>
-
+      <div className="relative z-10 w-full py-16 px-6">
+        {/* Top Section - Todo alineado a la izquierda */}
+        <div className="space-y-8 mb-12">
           {/* Logo Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col items-center lg:items-end justify-center space-y-4"
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-start space-y-3"
           >
             <Image
               src="/Resources/Logo Xclusiv Principal.png"
@@ -149,14 +124,28 @@ export default function Footer() {
               height={15}
               className="h-auto w-28 lg:w-32"
             />
-            <p className="text-gray-400 text-sm text-center lg:text-right">
+            <p className="text-gray-400 text-sm text-left">
               Diseñado para atletas que buscan cambiar el mundo
             </p>
+          </motion.div>
+
+          {/* Únete a la Revolución */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="space-y-2"
+          >
+            <h3 className="text-2xl font-black text-left bg-[#C30F45] bg-clip-text text-transparent">
+              Únete a la Revolución
+            </h3>
+            <p className="text-gray-300 text-sm text-left">Sé el primero en conocer las novedades</p>
           </motion.div>
         </div>
 
         {/* Middle Section - Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 px-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {footerSections.map((section, sectionIndex) => (
             <motion.div
               key={section.title}
@@ -164,12 +153,12 @@ export default function Footer() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: sectionIndex * 0.1 }}
-              className="space-y-4"
+              className="space-y-4 text-left"
               onMouseEnter={() => setHoveredSection(section.title)}
               onMouseLeave={() => setHoveredSection(null)}
             >
               <motion.h3
-                className="text-lg font-bold text-primary-500 cursor-pointer"
+                className="text-lg font-bold text-[#C30F45] cursor-pointer text-left"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.3 }}
               >
@@ -184,12 +173,22 @@ export default function Footer() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: (sectionIndex * 0.1) + (linkIndex * 0.05) }}
                   >
-                    <Link
-                      href={link.href}
-                      className="text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:pl-2 block"
-                    >
-                      {link.name}
-                    </Link>
+                    {link.isSection ? (
+                      <a
+                        href={link.href}
+                        onClick={(e) => handleSectionClick(e, link.href)}
+                        className="text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:pl-2 block cursor-pointer"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:pl-2 block"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </motion.li>
                 ))}
               </ul>
@@ -238,12 +237,12 @@ export default function Footer() {
           </div>
 
           {/* Copyright & Additional Info */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left px-6">
+          <div className="flex flex-col md:flex-row items-start justify-between gap-4 text-left">
             <div className="space-y-2">
-              <p className="text-gray-400 text-sm text-center">
+              <p className="text-gray-400 text-sm text-left">
                 © {currentYear} <span className="text-primary-500 font-semibold">{APP_CONFIG.name}</span>. Todos los derechos reservados.
               </p>
-              <p className="text-gray-500 text-xs text-center">
+              <p className="text-gray-500 text-xs text-left">
                 Diseñado con pasión para los atletas que buscan cambiar el mundo
               </p>
             </div>

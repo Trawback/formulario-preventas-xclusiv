@@ -13,15 +13,15 @@ Se han aplicado mejoras significativas de UX Design basadas en principios modern
 ## 🎨 Nueva Paleta de Colores
 
 ### Colores Principales:
-- **Rosa Primary**: `#ee4679` (Botones, CTAs, acentos)
+- **Rosa Primary**: `#C30F45` (Botones, CTAs, acentos)
 - **Blanco**: `#FFFFFF` (Textos, fondos)
 - **Dark**: `#231123` (Títulos, acentos oscuros)
-- **Gradientes**: Pink-Purple para elementos decorativos
+- **Gradientes**: Red-Purple para elementos decorativos
 
 ### Aplicación:
 ```css
-primary-500: #ee4679  /* Botones principales */
-primary-600: #dc2761  /* Hover states */
+primary-500: #C30F45  /* Botones principales */
+primary-600: #a90c3a  /* Hover states */
 dark: #231123         /* Títulos y texto importante */
 ```
 
@@ -147,8 +147,8 @@ dark: #231123         /* Títulos y texto importante */
 ```css
 /* Pulse Glow - Para CTA principal */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(238, 70, 121, 0); }
-  50% { box-shadow: 0 0 20px 8px rgba(238, 70, 121, 0.4); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(195, 15, 69, 0); }
+  50% { box-shadow: 0 0 20px 8px rgba(195, 15, 69, 0.4); }
 }
 
 /* Shake - Para errores de validación */
@@ -275,7 +275,7 @@ Checked → bg-primary-500, text-white, shadow
                 animate-pulse-slow" />
 
 {/* Form section background */}
-<section className="bg-gradient-to-br from-pink-100 
+<section className="bg-gradient-to-br from-primary-100 
                     via-purple-50 to-white">
   {/* Content */}
 </section>

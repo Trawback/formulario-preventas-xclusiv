@@ -35,22 +35,22 @@ export default function RegisterForm() {
       id: 'Hoodie XSV1',
       nombre: 'Hoodie "XSV1"',
       descripcion: 'Gramaje 350gr/m2, 100% algodón, técnica "Puff"',
-      precio: '$749.00 mxn',
+      precio: '$899.00 mxn',
       imagen: '/Resources/Hoodie%20Boxy%20Frente%20mockup_Mesa%20de%20trabajo%201%20copia-10.png',
     },
     {
       id: 'Tank Top XSV2',
       nombre: 'Tank Top "XSV2"',
       descripcion: 'Gramaje 200gr/m2, sin mangas, corte regular',
-      precio: '$399.00 mxn',
-      imagen: '/Resources/Hoodie%20Boxy%20Espalda%20mockup_Mesa%20de%20trabajo%201%20copia%202-12.png', // Temporal
+      precio: '$549.00 mxn',
+      imagen: '/Resources/Diseño sin título (3).png', // Temporal
     },
     {
-      id: 'Hoodie Classic',
-      nombre: 'Hoodie Classic',
-      descripcion: 'Confort y estilo, edición especial',
-      precio: '$749.00 mxn',
-      imagen: '/Resources/Hoodie%20Boxy%20Frente%20modelo_Mesa%20de%20trabajo%201-03.png', // Temporal
+      id: 'Cropped Boxy "XSV3"',
+      nombre: 'Cropped Boxy "XSV3"',
+      descripcion: 'Gramaje 200gr/m2, sin mangas, corte boxy.',
+      precio: '$579.00 mxn',
+      imagen: '/Resources/Diseño sin título (3).png', // Temporal
     },
   ];
 
@@ -405,30 +405,29 @@ export default function RegisterForm() {
             
             {/* Input del número */}
             <input
-              {...register('whatsapp', {
-                onChange: (e) => {
-                  // Formatear el valor con el código de país
-                  const numberOnly = e.target.value.replace(/\D/g, '');
-                  setValue('whatsapp', `${countryCode} ${numberOnly}`);
-                },
-              })}
+              {...register('whatsapp')}
               type="tel"
               placeholder="56 7488 2212"
               className="input-field flex-1"
               disabled={isSubmitting}
+              onChange={(e) => {
+                // Solo permitir números y espacios
+                const value = e.target.value.replace(/[^\d\s]/g, '');
+                e.target.value = value;
+              }}
+              onBlur={(e) => {
+                // Agregar el código de país al perder el foco si hay un número
+                const numberOnly = e.target.value.replace(/\D/g, '');
+                if (numberOnly) {
+                  setValue('whatsapp', `${countryCode} ${numberOnly}`, { shouldValidate: true });
+                }
+              }}
               onFocus={(e) => {
                 // Limpiar el código de país si está presente para facilitar edición
                 const currentValue = e.target.value;
-                if (currentValue.startsWith('+')) {
+                if (currentValue.includes('+')) {
                   const numberPart = currentValue.replace(/^\+\d+\s*/, '');
                   e.target.value = numberPart;
-                }
-              }}
-              onBlur={(e) => {
-                // Agregar el código de país al perder el foco
-                const numberOnly = e.target.value.replace(/\D/g, '');
-                if (numberOnly) {
-                  setValue('whatsapp', `${countryCode} ${numberOnly}`);
                 }
               }}
             />
@@ -468,7 +467,7 @@ export default function RegisterForm() {
       </div>
 
       {/* Sección: Detalles del Pedido */}
-      <div className="space-y-4 rounded-2xl bg-gradient-to-br from-primary-50 to-pink-50 p-6">
+      <div className="space-y-4 rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 p-6">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white shadow-md">
             <span className="text-sm font-bold">2</span>
@@ -583,10 +582,49 @@ export default function RegisterForm() {
             )}
           </div>
         </div>
+
+        {/* Disclaimer de Pago y Envío */}
+        <div className="mt-4 rounded-xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 to-white p-4 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 mt-0.5">
+              <svg className="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h4 className="text-sm font-black text-dark mb-2 flex items-center gap-2">
+                <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Proceso de Pago y Envío
+              </h4>
+              <div className="space-y-2 text-xs text-gray-700">
+                <p className="flex items-start gap-2">
+                  <span className="text-primary-600 font-bold">1.</span>
+                  <span>Xclusiv te contactará para enviar un <span className="font-bold text-primary-600">link de pago seguro para proteger tu compra.</span></span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span className="text-primary-600 font-bold">2.</span>
+                  <span>Al realizar el pago, podrás <span className="font-bold text-primary-600">elegir tu opción de envío</span> y proporcionar tus datos de entrega</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span className="text-primary-600 font-bold">3.</span>
+                  <span>Recibirás confirmación y tracking de tu pedido</span>
+                </p>
+              </div>
+              <div className="mt-3 flex items-center gap-2 text-xs">
+                <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span className="font-semibold text-gray-700">Pago 100% seguro y protegido</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Sección: Método de Contacto */}
-      <div className="space-y-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 p-6">
+      <div className="space-y-4 rounded-2xl bg-gradient-to-br from-purple-50 to-primary-50 p-6">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white shadow-md">
             <span className="text-sm font-bold">3</span>

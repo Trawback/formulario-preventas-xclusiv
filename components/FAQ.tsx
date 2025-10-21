@@ -34,7 +34,7 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="section-padding bg-[#231123]">
+    <section id="faq" className="section-padding bg-[#231123]">
       <div className="container-custom">
         <div className="mb-12 text-center">
           <h2 className="heading-2 mb-4 text-white">Preguntas Frecuentes</h2>

@@ -66,12 +66,10 @@ export interface WebhookPayload {
 
 // Configuración de tallas
 export const TALLAS_DISPONIBLES = [
-  { value: 'XS', label: 'XS' },
-  { value: 'S', label: 'S' },
+  { value: 'S', label: 'CH' },
   { value: 'M', label: 'M' },
-  { value: 'L', label: 'L' },
-  { value: 'XL', label: 'XL' },
-  { value: 'XXL', label: 'XXL' },
+  { value: 'L', label: 'G' },
+  { value: 'XL', label: 'XG' },
 ];
 
 // Prenda fija de la preventa
