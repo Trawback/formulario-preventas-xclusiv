@@ -1,3 +1,8 @@
+/**
+ * API Route: Register
+ * Maneja el registro de usuarios en la preventa
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { RegisterFormSchema, type WebhookPayload } from '@/lib/types';
@@ -7,19 +12,32 @@ import {
   validateRecaptcha,
   formatTimestamp,
 } from '@/lib/utils';
+import { sendToWebhook, isWebhookConfigured } from '@/lib/services';
 
-// Configuración desde variables de entorno
-const WEBHOOK_URL = process.env.APP_WEBHOOK_URL || '';
-const WEBHOOK_TOKEN = process.env.APP_WEBHOOK_TOKEN || '';
+// ============================================
+// CONFIGURACIÓN
+// ============================================
+
+const WEBHOOK_CONFIG = {
+  url: process.env.APP_WEBHOOK_URL || '',
+  token: process.env.APP_WEBHOOK_TOKEN || '',
+};
+
 const HASH_SALT = process.env.APP_HASH_SALT || 'default-salt-change-me';
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET || '';
 
+// ============================================
+// HANDLERS
+// ============================================
+
+/**
+ * POST /api/register
+ * Registra un nuevo lead en la preventa
+ */
 export async function POST(request: NextRequest) {
   try {
-    // Parsear el body
+    // 1. Parsear y validar datos
     const body = await request.json();
-
-    // Validar datos con Zod
     const validationResult = RegisterFormSchema.safeParse(body);
 
     if (!validationResult.success) {
@@ -35,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const data = validationResult.data;
 
-    // Validar reCAPTCHA si está configurado
+    // 2. Validar reCAPTCHA (si está configurado)
     if (RECAPTCHA_SECRET && data.recaptcha_token) {
       const isValidRecaptcha = await validateRecaptcha(
         data.recaptcha_token,
@@ -53,18 +71,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generar lead_id único
+    // 3. Generar identificadores y metadata
     const leadId = uuidv4();
-
-    // Obtener y hashear la IP del cliente
     const clientIp = getClientIp(request.headers);
     const ipHash = hashIp(clientIp, HASH_SALT);
-
-    // Obtener headers adicionales
     const userAgent = request.headers.get('user-agent') || '';
     const referer = request.headers.get('referer') || '';
 
-    // Preparar payload para el webhook
+    // 4. Preparar payload para el webhook
     const webhookPayload: WebhookPayload = {
       lead_id: leadId,
       timestamp: formatTimestamp(),
@@ -88,32 +102,29 @@ export async function POST(request: NextRequest) {
       referer: referer,
     };
 
-    // Enviar al webhook de Google Sheets (Apps Script)
-    if (WEBHOOK_URL) {
+    // 5. Enviar al webhook de Google Sheets
+    if (isWebhookConfigured(WEBHOOK_CONFIG)) {
       try {
-        const webhookResponse = await fetch(WEBHOOK_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${WEBHOOK_TOKEN}`,
-          },
-          body: JSON.stringify(webhookPayload),
+        console.log('🔄 Enviando datos al webhook...', {
+          url: WEBHOOK_CONFIG.url,
+          lead_id: webhookPayload.lead_id
         });
 
-        if (!webhookResponse.ok) {
-          console.error('Webhook error:', await webhookResponse.text());
-          throw new Error('Error al guardar los datos');
-        }
+        const webhookResponse = await sendToWebhook(webhookPayload, WEBHOOK_CONFIG);
+        
+        console.log('✅ Datos guardados en Google Sheets exitosamente', {
+          lead_id: webhookResponse.lead_id
+        });
       } catch (webhookError) {
-        console.error('Error sending to webhook:', webhookError);
+        console.error('❌ Error enviando al webhook:', webhookError);
         // No bloqueamos la respuesta al usuario si el webhook falla
         // pero lo registramos para debugging
       }
     } else {
-      console.warn('WEBHOOK_URL not configured');
+      console.warn('⚠️  Webhook no configurado (URL o TOKEN faltante)');
     }
 
-    // Respuesta exitosa
+    // 6. Respuesta exitosa al cliente
     return NextResponse.json(
       {
         ok: true,
@@ -123,7 +134,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error in register API:', error);
+    console.error('❌ Error en API register:', error);
 
     return NextResponse.json(
       {
@@ -135,7 +146,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Método OPTIONS para CORS (si es necesario)
+/**
+ * OPTIONS /api/register
+ * Maneja preflight requests para CORS
+ */
 export async function OPTIONS(request: NextRequest) {
   return NextResponse.json(
     {},

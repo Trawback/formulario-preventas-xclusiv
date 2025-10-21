@@ -306,14 +306,84 @@ Si todo funciona en desarrollo, tu proyecto está listo para:
 
 ---
 
+## 🐛 Debugging: Los Datos No Llegan a Sheets
+
+Si la página de confirmación aparece pero los datos NO llegan a Google Sheets:
+
+### Opción 1: Script de Prueba Directo
+
+1. **Edita** `scripts/test-webhook.js`
+2. **Pega** tu `WEBHOOK_URL` y `WEBHOOK_TOKEN` del `.env.local`
+3. **Ejecuta**:
+   ```bash
+   node scripts/test-webhook.js
+   ```
+
+**Resultados posibles:**
+
+✅ **Éxito**: Si ves `🎉 ¡ÉXITO!`, tu webhook funciona. El problema está en otro lado.
+
+❌ **Error 401/403**: Tu `WEBHOOK_TOKEN` es incorrecto o no coincide con Apps Script.
+
+❌ **Error 404**: Tu `WEBHOOK_URL` es incorrecta.
+
+❌ **Error de red**: El webhook no está desplegado o la URL no es accesible.
+
+### Opción 2: Ver Logs en Tiempo Real
+
+1. **Reinicia** el servidor en desarrollo:
+   ```bash
+   npm run dev
+   ```
+
+2. **Observa la terminal** mientras envías el formulario
+
+3. **Busca estos logs**:
+   ```
+   🔄 Enviando datos al webhook...
+   📊 Respuesta del webhook: { status: 200, ... }
+   ✅ Datos guardados en Google Sheets exitosamente
+   ```
+
+**Si ves:**
+- `⚠️ WEBHOOK_URL not configured` → Falta la variable en `.env.local`
+- `❌ Webhook error:` → Hay un problema con Apps Script
+- `❌ Error sending to webhook:` → Error de red o URL incorrecta
+
+### Opción 3: Verificar Apps Script
+
+1. Ve a **Google Apps Script** → **Ejecuciones**
+2. Busca ejecuciones recientes de `doPost`
+3. Revisa si hay errores
+
+**Errores comunes:**
+- `Unauthorized`: Token incorrecto
+- `TypeError`: Datos mal formateados
+- `No authorization`: Falta el header Authorization
+
+### Opción 4: Prueba Manual del Endpoint
+
+Abre tu navegador y ve a:
+```
+https://script.google.com/macros/s/TU_SCRIPT_ID/exec
+```
+
+Deberías ver: `Method Not Allowed` (es normal, solo acepta POST)
+
+Si ves un error diferente, tu deployment no está activo.
+
+---
+
 ## 📞 Soporte Adicional
 
-Si sigues teniendo problemas:
+Si después de todos estos pasos sigues teniendo problemas:
 
-1. Revisa los logs de Apps Script
-2. Revisa la consola del navegador
-3. Verifica que todas las variables de entorno estén correctas
-4. Asegúrate de que el servidor esté reiniciado después de cambiar `.env.local`
+1. ✅ Verifica que el **Web App** esté desplegado como **Nueva implementación**
+2. ✅ Confirma que el acceso sea **Cualquier usuario**
+3. ✅ Copia de nuevo la URL del webhook (a veces cambia)
+4. ✅ Reinicia el servidor después de cambiar `.env.local`
+5. ✅ Revisa que no haya espacios extra en las variables de entorno
+6. ✅ Prueba con el script `test-webhook.js` primero
 
 **Recuerda**: El archivo `.env.local` NUNCA se debe commitear a Git (ya está en `.gitignore`).
 

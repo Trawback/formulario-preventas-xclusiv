@@ -1,82 +1,105 @@
-/**
- * XCLUSIV Preventa - Google Apps Script Webhook
- * 
- * Este script recibe los datos del formulario de registro y los guarda en Google Sheets.
- * 
- * INSTRUCCIONES DE CONFIGURACIÓN:
- * 
- * 1. Crea una Google Sheet con una hoja llamada "Registros"
- * 2. Agrega estas columnas en la primera fila:
- *    lead_id | timestamp | email | whatsapp | ciudad | modelo_favorito | talla | 
- *    intencion_compra | cantidad_estimada | marketing_consent | ip_hash | 
- *    utm_source | utm_medium | utm_campaign | utm_content | referer
- * 
- * 3. En tu Google Sheet, ve a Extensiones > Apps Script
- * 4. Pega este código
- * 5. Cambia el valor de AUTHORIZED_TOKEN por un token seguro
- * 6. Guarda el proyecto
- * 7. Despliega como Aplicación Web:
- *    - Ejecutar como: Yo
- *    - Quién tiene acceso: Cualquier persona
- * 8. Copia la URL del webhook y úsala en tu .env.local como APP_WEBHOOK_URL
- */
-
 function doPost(e) {
+  // ==========================================
+  // CONFIGURACIÓN - CAMBIA ESTOS VALORES
+  // ==========================================
+  
+  // Token de autorización - DEBE coincidir con APP_WEBHOOK_TOKEN en tu .env.local
+  // Genera uno seguro con: openssl rand -base64 32
+  const AUTHORIZED_TOKEN = "ZDtGKTRwgp6HdRJLUFx0bi1VxdRyCBI8Q1NblA1xARQ=";
+  
+  // Nombre de la hoja donde se guardarán los datos
+  const SHEET_NAME = "Registros";
+  
+  // ==========================================
+  // FIN DE CONFIGURACIÓN
+  // ==========================================
+  
   try {
-    // ==========================================
-    // CONFIGURACIÓN - CAMBIA ESTOS VALORES
-    // ==========================================
-    
-    // Token de autorización - DEBE coincidir con APP_WEBHOOK_TOKEN en tu .env.local
-    // Genera uno seguro con: openssl rand -base64 32
-    const AUTHORIZED_TOKEN = "CAMBIA_ESTE_TOKEN_POR_UNO_SEGURO";
-    
-    // Nombre de la hoja donde se guardarán los datos
-    const SHEET_NAME = "Registros";
-    
-    // ==========================================
-    // FIN DE CONFIGURACIÓN
-    // ==========================================
-    
     // Log de la petición recibida
     Logger.log("Petición recibida");
+    Logger.log("typeof e: " + typeof e);
+    Logger.log("e: " + JSON.stringify(e));
     
-    // Verificar autorización
-    const authHeader = e.parameter.authorization || 
-                      (e.postData && e.postData.headers && e.postData.headers.Authorization) || 
-                      "";
-    
-    const token = authHeader.replace("Bearer ", "");
-    
-    if (token !== AUTHORIZED_TOKEN) {
-      Logger.log("Token no autorizado: " + token);
+    // Verificar que e existe y tiene las propiedades esperadas
+    if (!e || typeof e !== 'object') {
+      Logger.log("❌ Error: Objeto 'e' no definido o inválido");
       return ContentService.createTextOutput(JSON.stringify({
+        ok: false,
         success: false,
-        error: "No autorizado"
+        error: "Invalid request - e is undefined"
       }))
       .setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Parsear datos del POST
+    Logger.log("Tipo de request: " + (e.postData ? "POST con datos" : "Otro"));
+    
+    // Parsear datos del POST primero
     let data;
     try {
       data = JSON.parse(e.postData.contents);
       Logger.log("Datos recibidos: " + JSON.stringify(data));
     } catch (parseError) {
-      Logger.log("Error al parsear JSON: " + parseError);
+      Logger.log("❌ Error al parsear JSON: " + parseError);
       return ContentService.createTextOutput(JSON.stringify({
+        ok: false,
         success: false,
         error: "JSON inválido"
       }))
       .setMimeType(ContentService.MimeType.JSON);
     }
     
+    // Verificar autorización usando el token del body como alternativa
+    let authHeader = "";
+    let token = "";
+    
+    // Log completo de lo que recibimos para debugging
+    Logger.log("e.parameter: " + JSON.stringify(e.parameter));
+    
+    // Método 1: Intentar desde query parameters (?authorization=...)
+    if (e.parameter && e.parameter.authorization) {
+      authHeader = e.parameter.authorization;
+      token = authHeader.replace("Bearer ", "").trim();
+      Logger.log("✓ Token obtenido de e.parameter: " + token);
+    }
+    // Método 2: Token en el body del JSON (fallback)
+    else if (data._auth_token) {
+      token = data._auth_token;
+      Logger.log("✓ Token obtenido del body: " + token);
+      delete data._auth_token; // Remover del objeto de datos
+    }
+    // Método 3: Sin autenticación válida
+    else {
+      Logger.log("❌ No se encontró token de autorización");
+      Logger.log("💡 Para que funcione, agrega ?authorization=Bearer%20TOKEN a la URL");
+    }
+    
+    Logger.log("Token extraído: '" + token + "'");
+    Logger.log("Token esperado: '" + AUTHORIZED_TOKEN + "'");
+    Logger.log("¿Coinciden?: " + (token === AUTHORIZED_TOKEN));
+    
+    if (token !== AUTHORIZED_TOKEN) {
+      Logger.log("❌ Token no autorizado");
+      return ContentService.createTextOutput(JSON.stringify({
+        ok: false,
+        success: false,
+        error: "unauthorized",
+        debug: {
+          received_token_length: token.length,
+          expected_token_length: AUTHORIZED_TOKEN.length
+        }
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    Logger.log("✅ Token autorizado correctamente");
+    
     // Obtener la hoja de cálculo
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
     
     if (!sheet) {
-      Logger.log("Hoja no encontrada: " + SHEET_NAME);
+      Logger.log("❌ Hoja no encontrada: " + SHEET_NAME);
       return ContentService.createTextOutput(JSON.stringify({
+        ok: false,
         success: false,
         error: "Hoja '" + SHEET_NAME + "' no encontrada"
       }))
@@ -108,10 +131,11 @@ function doPost(e) {
     
     // Agregar la fila a la hoja
     sheet.appendRow(row);
-    Logger.log("Fila agregada exitosamente");
+    Logger.log("✅ Fila agregada exitosamente");
     
     // Respuesta exitosa
     return ContentService.createTextOutput(JSON.stringify({
+      ok: true,
       success: true,
       message: "Datos guardados correctamente",
       lead_id: data.lead_id
@@ -119,8 +143,9 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON);
     
   } catch (error) {
-    Logger.log("Error general: " + error.toString());
+    Logger.log("❌ Error general: " + error.toString());
     return ContentService.createTextOutput(JSON.stringify({
+      ok: false,
       success: false,
       error: error.toString()
     }))
@@ -131,35 +156,91 @@ function doPost(e) {
 /**
  * Función de prueba para verificar que el script funciona
  * Ejecuta esta función desde el editor para probar
+ * 
+ * IMPORTANTE: Cambia TEST_TOKEN por el mismo valor que usas en AUTHORIZED_TOKEN (línea 9)
  */
 function testScript() {
+  // ⚠️ CAMBIA ESTE TOKEN POR EL MISMO QUE USAS EN LA LÍNEA 8
+  const TEST_TOKEN = "ZDtGKTRwgp6HdRJLUFx0bi1VxdRyCBI8Q1NblA1xARQ=";
+  
+  Logger.log("🧪 Iniciando test...");
+  Logger.log("📝 Token configurado: " + TEST_TOKEN);
+  
+  // Simular el objeto 'e' que Google Apps Script recibe en un POST real
   const testData = {
     postData: {
       contents: JSON.stringify({
         lead_id: "test-" + new Date().getTime(),
         timestamp: new Date().toISOString(),
+        nombre: "TEST",
+        apellido: "USUARIO",
         email: "test@example.com",
-        whatsapp: "+57 300 123 4567",
-        ciudad: "Bogotá",
-        modelo_favorito: "oversized-tee-black",
-        talla: "m",
-        intencion_compra: "seguro",
-        cantidad_estimada: "2",
-        marketing_consent: true,
+        whatsapp: "+52 55 1234 5678",
+        prenda: "Hoodie XSV1",
+        talla: "M",
+        ciudad: "Ciudad de México",
+        cantidad_estimada: 1,
+        contacto: "WhatsApp",
+        instagram_user: "@testuser",
+        consent_marketing: true,
         ip_hash: "test-hash-123",
         utm_source: "test",
         utm_medium: "manual",
-        utm_campaign: "test-campaign"
+        utm_campaign: "test-campaign",
+        utm_content: "",
+        user_agent: "Test Script",
+        referer: "http://localhost:3000"
       }),
-      headers: {
-        Authorization: "Bearer CAMBIA_ESTE_TOKEN_POR_UNO_SEGURO"
-      }
+      // Los headers deben ser un string JSON cuando vienen de fetch()
+      headers: JSON.stringify({
+        "Authorization": "Bearer " + TEST_TOKEN,
+        "Content-Type": "application/json"
+      }),
+      type: "application/json",
+      length: 500
     },
-    parameter: {}
+    parameter: {},
+    contextPath: "",
+    contentLength: 500,
+    queryString: ""
   };
   
-  const result = doPost(testData);
-  Logger.log("Resultado del test: " + result.getContent());
+  Logger.log("🚀 Llamando a doPost()...");
+  Logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  
+  try {
+    const result = doPost(testData);
+    const resultContent = result.getContent();
+    
+    Logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    Logger.log("📊 Resultado completo:");
+    Logger.log(resultContent);
+    
+    try {
+      const resultJson = JSON.parse(resultContent);
+      Logger.log("");
+      if (resultJson.ok || resultJson.success) {
+        Logger.log("✅✅✅ ¡TEST EXITOSO! ✅✅✅");
+        Logger.log("Los datos se guardaron en la hoja 'Registros'");
+        Logger.log("Verifica tu Google Sheet para confirmar");
+      } else {
+        Logger.log("❌❌❌ TEST FALLÓ ❌❌❌");
+        Logger.log("Error: " + resultJson.error);
+        Logger.log("");
+        Logger.log("💡 Posibles soluciones:");
+        if (resultJson.error === "unauthorized") {
+          Logger.log("→ Verifica que TEST_TOKEN (línea ~151) sea IGUAL a AUTHORIZED_TOKEN (línea 9)");
+        } else if (resultJson.error && resultJson.error.includes("Hoja")) {
+          Logger.log("→ Ejecuta la función setupSheet() primero");
+        }
+      }
+    } catch (parseError) {
+      Logger.log("⚠️ No se pudo parsear el resultado como JSON");
+      Logger.log("Respuesta raw: " + resultContent);
+    }
+  } catch (error) {
+    Logger.log("❌ Error al ejecutar doPost(): " + error.toString());
+  }
 }
 
 /**

@@ -4,9 +4,9 @@ export const APP_CONFIG = {
   tagline: 'Únete a la Revolución',
   description: 'Reserva tu Hoodie exclusivo y sé parte de la revolución athleisure',
   url: process.env.NEXT_PUBLIC_APP_URL || 'https://preventa.xclusiv.com',
-  email: 'hola@xclusiv.com',
+  email: 'info@xclusiv.com',
   social: {
-    instagram: 'https://instagram.com/xclusiv',
+    instagram: 'https://instagram.com/xclusiv_comp',
     tiktok: 'https://tiktok.com/@xclusiv',
   },
 };

@@ -1,6 +1,16 @@
+/**
+ * Tipos y schemas de validación para la aplicación
+ */
+
 import { z } from 'zod';
 
-// Schema de validación para el formulario de registro
+// ============================================
+// SCHEMAS DE VALIDACIÓN
+// ============================================
+
+/**
+ * Schema de validación para el formulario de registro
+ */
 export const RegisterFormSchema = z.object({
   nombre: z
     .string()
@@ -32,7 +42,13 @@ export const RegisterFormSchema = z.object({
 
 export type RegisterFormData = z.infer<typeof RegisterFormSchema>;
 
-// Tipo para la respuesta de la API
+// ============================================
+// TIPOS DE API
+// ============================================
+
+/**
+ * Respuesta de la API de registro
+ */
 export interface RegisterApiResponse {
   ok: boolean;
   lead_id?: string;
@@ -40,7 +56,9 @@ export interface RegisterApiResponse {
   message?: string;
 }
 
-// Tipo para los datos que se envían al webhook
+/**
+ * Payload que se envía al webhook de Google Sheets
+ */
 export interface WebhookPayload {
   lead_id: string;
   timestamp: string;
@@ -64,7 +82,13 @@ export interface WebhookPayload {
   referer?: string;
 }
 
-// Configuración de tallas
+// ============================================
+// CONFIGURACIÓN DE PRODUCTOS
+// ============================================
+
+/**
+ * Tallas disponibles
+ */
 export const TALLAS_DISPONIBLES = [
   { value: 'S', label: 'CH' },
   { value: 'M', label: 'M' },
@@ -72,10 +96,14 @@ export const TALLAS_DISPONIBLES = [
   { value: 'XL', label: 'XG' },
 ];
 
-// Prenda fija de la preventa
+/**
+ * Prenda fija de la preventa
+ */
 export const PRENDA_PREVENTA = 'Hoodie';
 
-// Opciones de contacto
+/**
+ * Opciones de método de contacto
+ */
 export const CONTACTO_OPTIONS = [
   { value: 'WhatsApp', label: 'WhatsApp' },
   { value: 'Instagram', label: 'Instagram' },
