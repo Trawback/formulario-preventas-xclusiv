@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { APP_CONFIG, SEO_CONFIG, GTM_ID } from '@/lib/config';
+import { APP_CONFIG, SEO_CONFIG, GTM_ID, RECAPTCHA_SITE_KEY } from '@/lib/config';
 import Script from 'next/script';
 import CookieBanner from '@/components/CookieBanner';
 
@@ -92,6 +92,14 @@ export default function RootLayout({
               style={{ display: 'none', visibility: 'hidden' }}
             />
           </noscript>
+        )}
+
+        {/* Google reCAPTCHA v3 Script */}
+        {RECAPTCHA_SITE_KEY && (
+          <Script
+            src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`}
+            strategy="afterInteractive"
+          />
         )}
         
         {children}

@@ -195,15 +195,32 @@ curl -X POST \
   https://script.google.com/macros/s/TU_SCRIPT_ID/exec
 ```
 
-## 🔐 Configuración de reCAPTCHA (Opcional)
+## 🔐 Configuración de reCAPTCHA v3
 
-1. Ve a [Google reCAPTCHA](https://www.google.com/recaptcha/admin)
-2. Registra un nuevo sitio:
-   - Tipo: reCAPTCHA v3
-   - Dominios: tu dominio + localhost (para desarrollo)
-3. Copia las claves:
-   - **Site Key** → `NEXT_PUBLIC_RECAPTCHA_KEY`
-   - **Secret Key** → `RECAPTCHA_SECRET`
+reCAPTCHA v3 ya está integrado en el proyecto. Solo necesitas configurar las keys:
+
+### ⚡ Inicio Rápido (5 minutos)
+
+Ver guía completa: **[docs/RECAPTCHA_QUICKSTART.md](docs/RECAPTCHA_QUICKSTART.md)**
+
+**Pasos básicos:**
+
+1. Ve a [Google reCAPTCHA](https://www.google.com/recaptcha/admin/create)
+2. Crea un sitio nuevo (reCAPTCHA v3)
+3. Agrega a tu `.env.local`:
+   ```env
+   NEXT_PUBLIC_RECAPTCHA_KEY=tu-site-key-aqui
+   RECAPTCHA_SECRET=tu-secret-key-aqui
+   ```
+4. Reinicia el servidor: `npm run dev`
+
+**¡Listo!** El formulario ahora está protegido contra bots.
+
+### 📚 Documentación Completa
+
+- **[Quick Start](docs/RECAPTCHA_QUICKSTART.md)** - Configuración en 5 minutos
+- **[Guía Completa](docs/RECAPTCHA_SETUP.md)** - Setup detallado, troubleshooting y mejores prácticas
+- **[Script de Test](scripts/test-recaptcha.js)** - `node scripts/test-recaptcha.js`
 
 ## 📦 Estructura del Proyecto
 

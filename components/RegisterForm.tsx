@@ -50,7 +50,7 @@ export default function RegisterForm() {
       nombre: 'Cropped Boxy "XSV3"',
       descripcion: 'Gramaje 200gr/m2, sin mangas, corte boxy.',
       precio: '$579.00 mxn',
-      imagen: '/Resources/Diseño sin título (3).png', // Temporal
+      imagen: '/Resources/T.T Cropped Frente mockup_Mesa de trabajo 1 copia-10.png', // Temporal
     },
   ];
 

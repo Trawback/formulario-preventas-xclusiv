@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "generate-salt": "node scripts/generate-salt.js",
+    "test-recaptcha": "node scripts/test-recaptcha.js",
+    "test-webhook": "node scripts/test-webhook.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

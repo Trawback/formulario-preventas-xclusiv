@@ -59,13 +59,13 @@ export default function Gallery() {
       description: 'Gramaje 200gr/m2, sin mangas, corte boxy.',
       originalPrice: '$799.00 mxn',
       price: '$579.00 mxn',
-      image: '/Resources/Diseño sin título (3).png',
-      hoverImage: '/Resources/Diseño sin título (4).png',
+      image: '/Resources/T.T Cropped Frente mockup_Mesa de trabajo 1 copia-10.png',
+      hoverImage: '/Resources/T.T Cropped Espalda mockup_Mesa de trabajo 1 copia 2-12.png',
       gallery: [
-        '/Resources/Diseño sin título (3).png',
-        '/Resources/Diseño sin título (4).png',
-        '/Resources/Diseño sin título (5).png',
-        '/Resources/Diseño sin título (6).png',
+        '/Resources/T.T Cropped Frente mockup_Mesa de trabajo 1 copia-10.png',
+        '/Resources/T.T Cropped Espalda mockup_Mesa de trabajo 1 copia 2-12.png',
+        '/Resources/T.T Cropped Frente modelo_Mesa de trabajo 1-03.png',
+        '/Resources/T.T Cropped Espalda modelo_Mesa de trabajo 1-08.png',
       ]
     },
   ];
