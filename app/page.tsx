@@ -1,7 +1,6 @@
 import Hero from '@/components/Hero';
 import Gallery from '@/components/Gallery';
 import Benefits from '@/components/Benefits';
-import SizeGuide from '@/components/SizeGuide';
 import FAQ from '@/components/FAQ';
 import RegisterForm from '@/components/RegisterForm';
 import Footer from '@/components/Footer';
@@ -42,7 +41,6 @@ export default function Home() {
           </div>
         </section>
 
-        <SizeGuide />
         <FAQ />
       </main>
 

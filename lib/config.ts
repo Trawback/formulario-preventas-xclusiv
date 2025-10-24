@@ -23,7 +23,7 @@ export const SEO_CONFIG = {
 };
 
 // Configuración de Google Tag Manager
-export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
+export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-5K9G8DXP';
 
 // Configuración de reCAPTCHA
 export const RECAPTCHA_SITE_KEY =

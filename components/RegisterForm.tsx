@@ -37,7 +37,7 @@ export default function RegisterForm() {
     {
       id: 'Hoodie XSV1',
       nombre: 'Hoodie "XSV1"',
-      descripcion: 'Gramaje 350gr/m2, 100% algodón, técnica "Puff"',
+      descripcion: 'Unisex, Gramaje 350gr/m2, 100% algodón, técnica "Puff", Sin cordones.',
       precio: '$899.00 mxn',
       imagen: '/Resources/Hoodie%20Boxy%20Frente%20mockup_Mesa%20de%20trabajo%201%20copia-10.png',
     },
@@ -181,26 +181,36 @@ export default function RegisterForm() {
         return [...prev, {
           prenda_id: prenda.id,
           prenda_nombre: prenda.nombre,
-          talla: '',
+          tallas: [],
           cantidad: 1,
         }];
       }
     });
   };
 
-  const updatePrendaTalla = (prendaId: string, talla: string) => {
+  const updatePrendaTalla = (prendaId: string, tallaIndex: number, talla: string) => {
     setPrendasSeleccionadas(prev =>
-      prev.map(p =>
-        p.prenda_id === prendaId ? { ...p, talla } : p
-      )
+      prev.map(p => {
+        if (p.prenda_id === prendaId) {
+          const newTallas = [...p.tallas];
+          newTallas[tallaIndex] = talla;
+          return { ...p, tallas: newTallas };
+        }
+        return p;
+      })
     );
   };
 
   const updatePrendaCantidad = (prendaId: string, cantidad: number) => {
     setPrendasSeleccionadas(prev =>
-      prev.map(p =>
-        p.prenda_id === prendaId ? { ...p, cantidad } : p
-      )
+      prev.map(p => {
+        if (p.prenda_id === prendaId) {
+          // Ajustar el array de tallas según la nueva cantidad
+          const newTallas = Array(cantidad).fill('').map((_, i) => p.tallas[i] || '');
+          return { ...p, cantidad, tallas: newTallas };
+        }
+        return p;
+      })
     );
   };
 
@@ -517,14 +527,14 @@ export default function RegisterForm() {
             <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            ¿Qué día compites? *
+            ¿Asistirás al evento? *
           </label>
           <select
             {...register('dia_competencia')}
             className="input-field cursor-pointer"
             disabled={isSubmitting}
           >
-            <option value="">Selecciona el día</option>
+            <option value="">Selecciona una opción</option>
             {DIA_COMPETENCIA_OPTIONS.map((dia) => (
               <option key={dia.value} value={dia.value}>
                 {dia.label}
@@ -599,34 +609,46 @@ export default function RegisterForm() {
                   </div>
                 </div>
 
-                {/* Campos de talla y cantidad si está seleccionada */}
+                {/* Campos de cantidad y tallas si está seleccionada */}
                 {isPrendaSeleccionada(prenda.id) && (
                   <div className="animate-slide-down space-y-3 rounded-xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 to-white p-4">
+                    {/* Selector de cantidad */}
                     <div>
-                      <label className="label-field text-xs">Talla *</label>
+                      <label className="label-field text-xs">Cantidad * (Máximo 3)</label>
                       <select
-                        value={getPrendaData(prenda.id)?.talla || ''}
-                        onChange={(e) => updatePrendaTalla(prenda.id, e.target.value)}
+                        value={getPrendaData(prenda.id)?.cantidad || 1}
+                        onChange={(e) => updatePrendaCantidad(prenda.id, parseInt(e.target.value))}
                         className="input-field text-sm font-semibold"
                         disabled={isSubmitting}
                       >
-                        <option value="">Selecciona</option>
-                        {TALLAS_DISPONIBLES.map((talla) => (
-                          <option key={talla.value} value={talla.value}>
-                            {talla.label}
-                          </option>
-                        ))}
+                        <option value={1}>1 prenda</option>
+                        <option value={2}>2 prendas</option>
+                        <option value={3}>3 prendas</option>
                       </select>
                     </div>
-                    <div>
-                      <label className="label-field text-xs">Cantidad *</label>
-                      <input
-                        type="text"
-                        value="1"
-                        readOnly
-                        className="input-field text-sm font-semibold bg-gray-100 cursor-not-allowed"
-                        disabled={isSubmitting}
-                      />
+
+                    {/* Selectores de talla según cantidad */}
+                    <div className="space-y-2">
+                      {Array.from({ length: getPrendaData(prenda.id)?.cantidad || 1 }).map((_, index) => (
+                        <div key={index}>
+                          <label className="label-field text-xs">
+                            Talla #{index + 1} *
+                          </label>
+                          <select
+                            value={getPrendaData(prenda.id)?.tallas[index] || ''}
+                            onChange={(e) => updatePrendaTalla(prenda.id, index, e.target.value)}
+                            className="input-field text-sm font-semibold"
+                            disabled={isSubmitting}
+                          >
+                            <option value="">Selecciona talla</option>
+                            {TALLAS_DISPONIBLES.map((talla) => (
+                              <option key={talla.value} value={talla.value}>
+                                {talla.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

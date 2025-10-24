@@ -14,8 +14,8 @@ import { z } from 'zod';
 export const PrendaSeleccionadaSchema = z.object({
   prenda_id: z.string().min(1, 'ID de prenda requerido'),
   prenda_nombre: z.string().min(1, 'Nombre de prenda requerido'),
-  talla: z.string().min(1, 'Selecciona una talla'),
-  cantidad: z.number().min(1, 'Mínimo 1').max(1, 'Máximo 1 por prenda'),
+  tallas: z.array(z.string().min(1, 'Selecciona una talla')).min(1, 'Selecciona al menos una talla'),
+  cantidad: z.number().min(1, 'Mínimo 1').max(3, 'Máximo 3 por prenda'),
 });
 
 /**
@@ -34,8 +34,8 @@ export const RegisterFormSchema = z.object({
   whatsapp: z.string().min(1, 'El WhatsApp es obligatorio'),
   prendas_seleccionadas: z.array(PrendaSeleccionadaSchema).min(1, 'Selecciona al menos una prenda').max(3, 'Máximo 3 prendas'),
   ciudad: z.string().optional(),
-  dia_competencia: z.enum(['7_noviembre', '8_noviembre', '9_noviembre'], {
-    required_error: 'Selecciona el día que compites',
+  dia_competencia: z.enum(['7_noviembre', '8_noviembre', '9_noviembre', 'no_compito'], {
+    required_error: 'Selecciona una opción',
   }),
   metodo_entrega: z.enum(['envio_nacional', 'entrega_presencial', 'entrega_cdmx'], {
     required_error: 'Selecciona un método de entrega',
@@ -132,6 +132,7 @@ export const DIA_COMPETENCIA_OPTIONS = [
   { value: '7_noviembre', label: '7 de Noviembre' },
   { value: '8_noviembre', label: '8 de Noviembre' },
   { value: '9_noviembre', label: '9 de Noviembre' },
+  { value: 'no_compito', label: 'No compito' },
 ];
 
 /**

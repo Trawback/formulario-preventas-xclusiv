@@ -112,6 +112,12 @@ function doPost(e) {
     const prenda2 = prendas[1] || {};
     const prenda3 = prendas[2] || {};
     
+    // Función helper para convertir array de tallas a string
+    const formatTallas = (prenda) => {
+      if (!prenda.tallas || !Array.isArray(prenda.tallas)) return "";
+      return prenda.tallas.filter(t => t).join(", ");
+    };
+    
     // Preparar la fila de datos
     const row = [
       data.lead_id || "",
@@ -124,15 +130,15 @@ function doPost(e) {
       data.dia_competencia || "",
       // Prenda 1
       prenda1.prenda_nombre || "",
-      prenda1.talla || "",
+      formatTallas(prenda1),
       prenda1.cantidad || "",
       // Prenda 2
       prenda2.prenda_nombre || "",
-      prenda2.talla || "",
+      formatTallas(prenda2),
       prenda2.cantidad || "",
       // Prenda 3
       prenda3.prenda_nombre || "",
-      prenda3.talla || "",
+      formatTallas(prenda3),
       prenda3.cantidad || "",
       data.metodo_entrega || "",
       data.contacto || "",
@@ -196,8 +202,8 @@ function testScript() {
         ciudad: "Ciudad de México",
         dia_competencia: "7_noviembre",
         prendas_seleccionadas: [
-          { prenda_id: "Hoodie XSV1", prenda_nombre: 'Hoodie "XSV1"', talla: "M", cantidad: 1 },
-          { prenda_id: "Tank Top XSV2", prenda_nombre: 'Tank Top "XSV2"', talla: "L", cantidad: 1 }
+          { prenda_id: "Hoodie XSV1", prenda_nombre: 'Hoodie "XSV1"', tallas: ["M"], cantidad: 1 },
+          { prenda_id: "Tank Top XSV2", prenda_nombre: 'Tank Top "XSV2"', tallas: ["L", "XL"], cantidad: 2 }
         ],
         metodo_entrega: "envio_nacional",
         contacto: "WhatsApp",
@@ -343,8 +349,8 @@ function setupSheet() {
       "Bogotá",
       "8_noviembre",
       'Hoodie "XSV1"',
-      "M",
-      "1",
+      "M, L",
+      "2",
       'Tank Top "XSV2"',
       "S",
       "1",

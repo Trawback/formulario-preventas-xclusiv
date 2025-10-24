@@ -5,6 +5,36 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.1.0] - 2024-10-24
+
+### ✨ Agregado
+- Sistema de selección de múltiples tallas por prenda
+- Selector de cantidad por prenda (1-3 unidades)
+- Interfaz dinámica que muestra campos de talla según cantidad seleccionada
+- Opción "No compito" en el campo de asistencia al evento
+
+### 🔄 Modificado
+- **RegisterForm**: Refactorizada la sección de selección de prendas
+  - Ahora cada prenda puede tener cantidad de 1 a 3 unidades
+  - Cada unidad puede tener una talla diferente
+  - La UI se actualiza dinámicamente según la cantidad seleccionada
+  - Campo "¿Qué día compites?" renombrado a "¿Asistirás al evento?" para incluir no competidores
+- **Types**: Actualizado `PrendaSeleccionadaSchema` y opciones del formulario
+  - Cambiado `talla: string` a `tallas: string[]`
+  - Cambiado límite de cantidad de 1 a 3 por prenda
+  - Agregado valor `no_compito` al enum `dia_competencia`
+  - Actualizada opción en `DIA_COMPETENCIA_OPTIONS`
+- **GOOGLE_APPS_SCRIPT.js**: Actualizado para manejar arrays de tallas
+  - Agregada función `formatTallas()` para convertir array de tallas a string
+  - Las tallas múltiples se guardan como "M, L, XL" en Google Sheets
+  - Actualizados ejemplos y tests con el nuevo formato
+
+### 🎯 Mejoras de UX
+- Usuario ahora puede seleccionar diferentes tallas si compra múltiples unidades de la misma prenda
+- Etiquetado claro: "Talla #1", "Talla #2", "Talla #3"
+- Validación automática: todas las tallas deben ser seleccionadas antes de enviar
+- Formulario más inclusivo: ahora acepta personas que no compiten pero quieren comprar
+
 ## [1.0.0] - 2024-10-20
 
 ### ✨ Agregado
