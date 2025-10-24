@@ -64,8 +64,6 @@ export default function Gallery() {
       gallery: [
         '/Resources/T.T Cropped Frente mockup_Mesa de trabajo 1 copia-10.png',
         '/Resources/T.T Cropped Espalda mockup_Mesa de trabajo 1 copia 2-12.png',
-        '/Resources/T.T Cropped Frente modelo_Mesa de trabajo 1-03.png',
-        '/Resources/T.T Cropped Espalda modelo_Mesa de trabajo 1-08.png',
       ]
     },
   ];

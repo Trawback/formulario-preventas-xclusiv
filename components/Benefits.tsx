@@ -40,7 +40,7 @@ export default function Benefits() {
         </svg>
       ),
       title: 'Stock garantizado',
-      description: 'Tu talla reservada sin riesgo de agotarse',
+      description: 'Aseguras tu talla y tu precio de preventa',
     },
     {
       icon: (
@@ -58,8 +58,8 @@ export default function Benefits() {
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
       ),
-      title: 'Colección única',
-      description: 'Diseños únicos que no se volverán a producir',
+      title: 'Entrega en evento hyrox CDMX',
+      description: 'Podrás recibir tu prenda en el evento hyrox CDMX sin costo adicional',
     },
   ];
 

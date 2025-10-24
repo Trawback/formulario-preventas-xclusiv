@@ -7,9 +7,12 @@ import Image from 'next/image';
 import {
   RegisterFormSchema,
   type RegisterFormData,
+  type PrendaSeleccionada,
   TALLAS_DISPONIBLES,
   PRENDA_PREVENTA,
   CONTACTO_OPTIONS,
+  METODO_ENTREGA_OPTIONS,
+  DIA_COMPETENCIA_OPTIONS,
   type RegisterApiResponse,
 } from '@/lib/types';
 import { RECAPTCHA_SITE_KEY } from '@/lib/config';
@@ -27,7 +30,7 @@ export default function RegisterForm() {
   const [emailInput, setEmailInput] = useState('');
   const [showEmailSuggestions, setShowEmailSuggestions] = useState(false);
   const [countryCode, setCountryCode] = useState('+52'); // México por defecto
-  const [selectedPrenda, setSelectedPrenda] = useState('Hoodie XSV1');
+  const [prendasSeleccionadas, setPrendasSeleccionadas] = useState<PrendaSeleccionada[]>([]);
 
   // Prendas disponibles con sus imágenes
   const prendas = [
@@ -76,6 +79,7 @@ export default function RegisterForm() {
 
   // Estados de México (32 estados)
   const estadosMexico = [
+    'Extranjero',
     'Aguascalientes',
     'Baja California',
     'Baja California Sur',
@@ -121,7 +125,7 @@ export default function RegisterForm() {
     resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
       consent_marketing: false,
-      cantidad_estimada: 1,
+      prendas_seleccionadas: [],
     },
   });
 
@@ -160,10 +164,53 @@ export default function RegisterForm() {
     }
   }, []);
 
-  // Establecer valor inicial de prenda
+  // Actualizar el formulario cuando cambien las prendas seleccionadas
   useEffect(() => {
-    setValue('prenda', selectedPrenda, { shouldValidate: false });
-  }, [selectedPrenda, setValue]);
+    setValue('prendas_seleccionadas', prendasSeleccionadas, { shouldValidate: true });
+  }, [prendasSeleccionadas, setValue]);
+
+  // Funciones para manejar la selección de prendas
+  const togglePrenda = (prenda: { id: string; nombre: string }) => {
+    setPrendasSeleccionadas(prev => {
+      const existe = prev.find(p => p.prenda_id === prenda.id);
+      if (existe) {
+        // Si existe, la removemos
+        return prev.filter(p => p.prenda_id !== prenda.id);
+      } else {
+        // Si no existe, la agregamos con valores por defecto
+        return [...prev, {
+          prenda_id: prenda.id,
+          prenda_nombre: prenda.nombre,
+          talla: '',
+          cantidad: 1,
+        }];
+      }
+    });
+  };
+
+  const updatePrendaTalla = (prendaId: string, talla: string) => {
+    setPrendasSeleccionadas(prev =>
+      prev.map(p =>
+        p.prenda_id === prendaId ? { ...p, talla } : p
+      )
+    );
+  };
+
+  const updatePrendaCantidad = (prendaId: string, cantidad: number) => {
+    setPrendasSeleccionadas(prev =>
+      prev.map(p =>
+        p.prenda_id === prendaId ? { ...p, cantidad } : p
+      )
+    );
+  };
+
+  const isPrendaSeleccionada = (prendaId: string) => {
+    return prendasSeleccionadas.some(p => p.prenda_id === prendaId);
+  };
+
+  const getPrendaData = (prendaId: string) => {
+    return prendasSeleccionadas.find(p => p.prenda_id === prendaId);
+  };
 
   // Función para obtener token de reCAPTCHA
   const getRecaptchaToken = async (): Promise<string | undefined> => {
@@ -464,6 +511,30 @@ export default function RegisterForm() {
             <p className="error-message">{errors.ciudad.message}</p>
           )}
         </div>
+
+        <div className="group">
+          <label className="label-field flex items-center gap-2">
+            <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            ¿Qué día compites? *
+          </label>
+          <select
+            {...register('dia_competencia')}
+            className="input-field cursor-pointer"
+            disabled={isSubmitting}
+          >
+            <option value="">Selecciona el día</option>
+            {DIA_COMPETENCIA_OPTIONS.map((dia) => (
+              <option key={dia.value} value={dia.value}>
+                {dia.label}
+              </option>
+            ))}
+          </select>
+          {errors.dia_competencia && (
+            <p className="error-message">{errors.dia_competencia.message}</p>
+          )}
+        </div>
       </div>
 
       {/* Sección: Detalles del Pedido */}
@@ -475,112 +546,97 @@ export default function RegisterForm() {
           <h3 className="text-lg font-black text-dark">Detalles del Pedido</h3>
         </div>
 
-        {/* Selector de Prendas */}
+        {/* Selector de Prendas - Selección múltiple */}
         <div className="space-y-4">
           <label className="label-field flex items-center gap-2">
             <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            Selecciona tu Prenda *
+            Selecciona tus Prendas * (Máximo 3)
           </label>
           
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {prendas.map((prenda) => (
-              <div
-                key={prenda.id}
-                onClick={() => {
-                  setSelectedPrenda(prenda.id);
-                  setValue('prenda', prenda.id, { shouldValidate: true });
-                }}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 transition-all duration-300 ${
-                  selectedPrenda === prenda.id
-                    ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-white shadow-lg shadow-primary-500/20 scale-105'
-                    : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-md'
-                }`}
-              >
-                {/* Checkmark si está seleccionado */}
-                {selectedPrenda === prenda.id && (
-                  <div className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 shadow-lg">
-                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
+              <div key={prenda.id} className="space-y-3">
+                {/* Tarjeta de la prenda */}
+                <div
+                  onClick={() => togglePrenda({ id: prenda.id, nombre: prenda.nombre })}
+                  className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 transition-all duration-300 ${
+                    isPrendaSeleccionada(prenda.id)
+                      ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-white shadow-lg shadow-primary-500/20'
+                      : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-md'
+                  }`}
+                >
+                  {/* Checkbox si está seleccionado */}
+                  <div className="absolute left-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-md border-2 bg-white shadow-md transition-all">
+                    {isPrendaSeleccionada(prenda.id) ? (
+                      <div className="h-full w-full rounded bg-primary-500 flex items-center justify-center">
+                        <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className="h-full w-full border-gray-300"></div>
+                    )}
+                  </div>
+                  
+                  {/* Imagen de la prenda */}
+                  <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
+                    <Image
+                      src={prenda.imagen}
+                      alt={prenda.nombre}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                    />
+                  </div>
+                  
+                  {/* Información de la prenda */}
+                  <div className="p-4">
+                    <h4 className="text-sm font-black text-dark">{prenda.nombre}</h4>
+                    <p className="mt-1 text-xs text-gray-600 line-clamp-2">{prenda.descripcion}</p>
+                    <p className="mt-2 text-lg font-black text-primary-600">{prenda.precio}</p>
+                  </div>
+                </div>
+
+                {/* Campos de talla y cantidad si está seleccionada */}
+                {isPrendaSeleccionada(prenda.id) && (
+                  <div className="animate-slide-down space-y-3 rounded-xl border-2 border-primary-200 bg-gradient-to-br from-primary-50 to-white p-4">
+                    <div>
+                      <label className="label-field text-xs">Talla *</label>
+                      <select
+                        value={getPrendaData(prenda.id)?.talla || ''}
+                        onChange={(e) => updatePrendaTalla(prenda.id, e.target.value)}
+                        className="input-field text-sm font-semibold"
+                        disabled={isSubmitting}
+                      >
+                        <option value="">Selecciona</option>
+                        {TALLAS_DISPONIBLES.map((talla) => (
+                          <option key={talla.value} value={talla.value}>
+                            {talla.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="label-field text-xs">Cantidad *</label>
+                      <input
+                        type="text"
+                        value="1"
+                        readOnly
+                        className="input-field text-sm font-semibold bg-gray-100 cursor-not-allowed"
+                        disabled={isSubmitting}
+                      />
+                    </div>
                   </div>
                 )}
-                
-                {/* Imagen de la prenda */}
-                <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
-                  <Image
-                    src={prenda.imagen}
-                    alt={prenda.nombre}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-110"
-                    sizes="(max-width: 640px) 100vw, 33vw"
-                  />
-                </div>
-                
-                {/* Información de la prenda */}
-                <div className="p-4">
-                  <h4 className="text-sm font-black text-dark">{prenda.nombre}</h4>
-                  <p className="mt-1 text-xs text-gray-600 line-clamp-2">{prenda.descripcion}</p>
-                  <p className="mt-2 text-lg font-black text-primary-600">{prenda.precio}</p>
-                </div>
               </div>
             ))}
           </div>
           
-          {/* Campo oculto para el formulario */}
-          <input type="hidden" {...register('prenda')} value={selectedPrenda} />
-          
-          {errors.prenda && (
-            <p className="error-message">{errors.prenda.message}</p>
+          {errors.prendas_seleccionadas && (
+            <p className="error-message">{errors.prendas_seleccionadas.message}</p>
           )}
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="group">
-            <label className="label-field flex items-center gap-2">
-              <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-              </svg>
-              Talla *
-            </label>
-            <select
-              {...register('talla')}
-              className="input-field cursor-pointer font-semibold"
-              disabled={isSubmitting}
-            >
-              <option value="">Selecciona tu talla</option>
-              {TALLAS_DISPONIBLES.map((talla) => (
-                <option key={talla.value} value={talla.value}>
-                  {talla.label}
-                </option>
-              ))}
-            </select>
-            {errors.talla && (
-              <p className="error-message">{errors.talla.message}</p>
-            )}
-          </div>
-
-          <div className="group">
-            <label className="label-field flex items-center gap-2">
-              <svg className="h-4 w-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-              </svg>
-              Cantidad (1-5) *
-            </label>
-            <input
-              {...register('cantidad_estimada', { valueAsNumber: true })}
-              type="number"
-              min="1"
-              max="5"
-              defaultValue="1"
-              className="input-field font-semibold"
-              disabled={isSubmitting}
-            />
-            {errors.cantidad_estimada && (
-              <p className="error-message">{errors.cantidad_estimada.message}</p>
-            )}
-          </div>
         </div>
 
         {/* Disclaimer de Pago y Envío */}
@@ -609,7 +665,7 @@ export default function RegisterForm() {
                 </p>
                 <p className="flex items-start gap-2">
                   <span className="text-primary-600 font-bold">3.</span>
-                  <span>Recibirás confirmación y tracking de tu pedido</span>
+                  <span>El pago se realizará una vez cerrada la preventa, si te contactamos antes es únicamente para notificarte que tu prenda esta asegurada.</span>
                 </p>
               </div>
               <div className="mt-3 flex items-center gap-2 text-xs">
@@ -623,11 +679,76 @@ export default function RegisterForm() {
         </div>
       </div>
 
+      {/* Sección: Método de Entrega */}
+      <div className="space-y-4 rounded-2xl bg-gradient-to-br from-blue-50 to-primary-50 p-6">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white shadow-md">
+            <span className="text-sm font-bold">3</span>
+          </div>
+          <h3 className="text-lg font-black text-dark">Método de Entrega</h3>
+        </div>
+
+        <fieldset>
+          <legend className="sr-only">Selecciona tu método de entrega preferido</legend>
+          <div className="space-y-3">
+            {METODO_ENTREGA_OPTIONS.map((option) => (
+              <label
+                key={option.value}
+                className="group relative cursor-pointer block"
+              >
+                <input
+                  {...register('metodo_entrega')}
+                  type="radio"
+                  value={option.value}
+                  className="peer sr-only"
+                  disabled={isSubmitting}
+                />
+                <div className="rounded-xl border-2 border-gray-300 bg-white p-4 shadow-sm transition-all duration-200 hover:border-primary-500 hover:shadow-md peer-checked:border-primary-500 peer-checked:bg-gradient-to-br peer-checked:from-primary-50 peer-checked:to-white peer-checked:shadow-lg peer-checked:shadow-primary-500/20">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      {option.value === 'envio_nacional' && (
+                        <svg className="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                      )}
+                      {option.value === 'entrega_presencial' && (
+                        <svg className="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      )}
+                      {option.value === 'entrega_cdmx' && (
+                        <svg className="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-black text-dark flex items-center gap-2">
+                        {option.label}
+                        <svg className="h-5 w-5 opacity-0 text-primary-600 transition-opacity peer-checked:opacity-100 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </h4>
+                      <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                        {option.descripcion}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            ))}
+          </div>
+          {errors.metodo_entrega && (
+            <p className="error-message">{errors.metodo_entrega.message}</p>
+          )}
+        </fieldset>
+      </div>
+
       {/* Sección: Método de Contacto */}
       <div className="space-y-4 rounded-2xl bg-gradient-to-br from-purple-50 to-primary-50 p-6">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white shadow-md">
-            <span className="text-sm font-bold">3</span>
+            <span className="text-sm font-bold">4</span>
           </div>
           <h3 className="text-lg font-black text-dark">Método de Contacto</h3>
         </div>
@@ -761,7 +882,7 @@ export default function RegisterForm() {
             </>
           ) : (
             <>
-              <span className="font-black">¡Reservar Mi Hoodie Ahora!</span>
+              <span className="font-black">¡Enviar mi preventa!</span>
               <svg
                 className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-2"
                 fill="none"

@@ -9,6 +9,16 @@ import { z } from 'zod';
 // ============================================
 
 /**
+ * Schema para cada prenda seleccionada
+ */
+export const PrendaSeleccionadaSchema = z.object({
+  prenda_id: z.string().min(1, 'ID de prenda requerido'),
+  prenda_nombre: z.string().min(1, 'Nombre de prenda requerido'),
+  talla: z.string().min(1, 'Selecciona una talla'),
+  cantidad: z.number().min(1, 'Mínimo 1').max(1, 'Máximo 1 por prenda'),
+});
+
+/**
  * Schema de validación para el formulario de registro
  */
 export const RegisterFormSchema = z.object({
@@ -22,10 +32,14 @@ export const RegisterFormSchema = z.object({
     .regex(/^[A-Z\s]+$/, 'Solo letras mayúsculas sin acentos ni caracteres especiales'),
   email: z.string().email('Email inválido').min(1, 'El email es obligatorio'),
   whatsapp: z.string().min(1, 'El WhatsApp es obligatorio'),
-  prenda: z.string().min(1, 'Selecciona una prenda'),
-  talla: z.string().min(1, 'Selecciona una talla'),
+  prendas_seleccionadas: z.array(PrendaSeleccionadaSchema).min(1, 'Selecciona al menos una prenda').max(3, 'Máximo 3 prendas'),
   ciudad: z.string().optional(),
-  cantidad_estimada: z.number().min(1, 'Mínimo 1').max(5, 'Máximo 5'),
+  dia_competencia: z.enum(['7_noviembre', '8_noviembre', '9_noviembre'], {
+    required_error: 'Selecciona el día que compites',
+  }),
+  metodo_entrega: z.enum(['envio_nacional', 'entrega_presencial', 'entrega_cdmx'], {
+    required_error: 'Selecciona un método de entrega',
+  }),
   contacto: z.enum(['WhatsApp', 'Instagram'], {
     required_error: 'Selecciona un método de contacto',
   }),
@@ -39,6 +53,8 @@ export const RegisterFormSchema = z.object({
   utm_campaign: z.string().optional(),
   utm_content: z.string().optional(),
 });
+
+export type PrendaSeleccionada = z.infer<typeof PrendaSeleccionadaSchema>;
 
 export type RegisterFormData = z.infer<typeof RegisterFormSchema>;
 
@@ -66,10 +82,10 @@ export interface WebhookPayload {
   apellido: string;
   email: string;
   whatsapp: string;
-  prenda: string;
-  talla: string;
+  prendas_seleccionadas: PrendaSeleccionada[];
   ciudad?: string;
-  cantidad_estimada: number;
+  dia_competencia: string;
+  metodo_entrega: string;
   contacto: string;
   instagram_user?: string;
   consent_marketing: boolean;
@@ -107,5 +123,35 @@ export const PRENDA_PREVENTA = 'Hoodie';
 export const CONTACTO_OPTIONS = [
   { value: 'WhatsApp', label: 'WhatsApp' },
   { value: 'Instagram', label: 'Instagram' },
+];
+
+/**
+ * Opciones de día de competencia
+ */
+export const DIA_COMPETENCIA_OPTIONS = [
+  { value: '7_noviembre', label: '7 de Noviembre' },
+  { value: '8_noviembre', label: '8 de Noviembre' },
+  { value: '9_noviembre', label: '9 de Noviembre' },
+];
+
+/**
+ * Opciones de método de entrega
+ */
+export const METODO_ENTREGA_OPTIONS = [
+  { 
+    value: 'envio_nacional', 
+    label: 'Envío Nacional',
+    descripcion: 'El envío nacional comienza a partir del 9 de noviembre'
+  },
+  { 
+    value: 'entrega_presencial', 
+    label: 'Entrega Presencial',
+    descripcion: 'Solo disponible los días viernes y sábado en el evento'
+  },
+  { 
+    value: 'entrega_cdmx', 
+    label: 'Entrega CDMX',
+    descripcion: 'Envíos por paqueterías como Uber dentro de los días del evento'
+  },
 ];
 

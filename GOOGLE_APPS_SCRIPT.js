@@ -106,6 +106,12 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
     }
     
+    // Preparar las prendas (hasta 3)
+    const prendas = data.prendas_seleccionadas || [];
+    const prenda1 = prendas[0] || {};
+    const prenda2 = prendas[1] || {};
+    const prenda3 = prendas[2] || {};
+    
     // Preparar la fila de datos
     const row = [
       data.lead_id || "",
@@ -114,10 +120,21 @@ function doPost(e) {
       data.apellido || "",
       data.email || "",
       data.whatsapp || "",
-      data.prenda || "Hoodie",
-      data.talla || "",
       data.ciudad || "",
-      data.cantidad_estimada || "",
+      data.dia_competencia || "",
+      // Prenda 1
+      prenda1.prenda_nombre || "",
+      prenda1.talla || "",
+      prenda1.cantidad || "",
+      // Prenda 2
+      prenda2.prenda_nombre || "",
+      prenda2.talla || "",
+      prenda2.cantidad || "",
+      // Prenda 3
+      prenda3.prenda_nombre || "",
+      prenda3.talla || "",
+      prenda3.cantidad || "",
+      data.metodo_entrega || "",
       data.contacto || "",
       data.instagram_user || "",
       data.consent_marketing ? "Sí" : "No",
@@ -176,10 +193,13 @@ function testScript() {
         apellido: "USUARIO",
         email: "test@example.com",
         whatsapp: "+52 55 1234 5678",
-        prenda: "Hoodie XSV1",
-        talla: "M",
         ciudad: "Ciudad de México",
-        cantidad_estimada: 1,
+        dia_competencia: "7_noviembre",
+        prendas_seleccionadas: [
+          { prenda_id: "Hoodie XSV1", prenda_nombre: 'Hoodie "XSV1"', talla: "M", cantidad: 1 },
+          { prenda_id: "Tank Top XSV2", prenda_nombre: 'Tank Top "XSV2"', talla: "L", cantidad: 1 }
+        ],
+        metodo_entrega: "envio_nacional",
         contacto: "WhatsApp",
         instagram_user: "@testuser",
         consent_marketing: true,
@@ -266,10 +286,18 @@ function setupSheet() {
     "apellido",
     "email",
     "whatsapp",
-    "prenda",
-    "talla",
     "ciudad",
-    "cantidad_estimada",
+    "dia_competencia",
+    "prenda_1",
+    "talla_1",
+    "cantidad_1",
+    "prenda_2",
+    "talla_2",
+    "cantidad_2",
+    "prenda_3",
+    "talla_3",
+    "cantidad_3",
+    "metodo_entrega",
     "contacto",
     "instagram_user",
     "consent_marketing",
@@ -312,10 +340,18 @@ function setupSheet() {
       "Pérez",
       "ejemplo@email.com",
       "+57 300 123 4567",
-      "Hoodie",
-      "M",
       "Bogotá",
-      "2",
+      "8_noviembre",
+      'Hoodie "XSV1"',
+      "M",
+      "1",
+      'Tank Top "XSV2"',
+      "S",
+      "1",
+      "",
+      "",
+      "",
+      "entrega_presencial",
       "WhatsApp",
       "",
       "Sí",
