@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { APP_CONFIG, SEO_CONFIG, GTM_ID, RECAPTCHA_SITE_KEY } from '@/lib/config';
 import Script from 'next/script';
+import { Analytics } from "@vercel/analytics/next"
 import CookieBanner from '@/components/CookieBanner';
+
 
 export const metadata: Metadata = {
   title: SEO_CONFIG.title,
