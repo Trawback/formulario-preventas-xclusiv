@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { APP_CONFIG, SEO_CONFIG, GTM_ID, RECAPTCHA_SITE_KEY } from '@/lib/config';
 import Script from 'next/script';
-import { Analytics } from "@vercel/analytics/next"
 import CookieBanner from '@/components/CookieBanner';
+import { Analytics } from "@vercel/analytics/next";
 
 
 export const metadata: Metadata = {
@@ -108,6 +108,9 @@ export default function RootLayout({
         
         {/* Cookie Banner */}
         <CookieBanner />
+        
+        {/* Vercel Analytics */}
+        <Analytics />
       </body>
     </html>
   );
