@@ -641,13 +641,13 @@ export default function RegisterForm() {
                             disabled={isSubmitting}
                           >
                             <option value="">Selecciona talla</option>
-                            {TALLAS_DISPONIBLES.map((talla) => (
-                              <option key={talla.value} value={talla.value}>
-                                {talla.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                        {TALLAS_DISPONIBLES.map((talla) => (
+                          <option key={talla.value} value={talla.value}>
+                            {talla.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                       ))}
                     </div>
                   </div>
