@@ -215,12 +215,8 @@ function testScript() {
         utm_campaign: "test-campaign",
         utm_content: "",
         user_agent: "Test Script",
-        referer: "http://localhost:3000"
-      }),
-      // Los headers deben ser un string JSON cuando vienen de fetch()
-      headers: JSON.stringify({
-        "Authorization": "Bearer " + TEST_TOKEN,
-        "Content-Type": "application/json"
+        referer: "http://localhost:3000",
+        _auth_token: TEST_TOKEN  // ⚠️ IMPORTANTE: Token en el body
       }),
       type: "application/json",
       length: 500
